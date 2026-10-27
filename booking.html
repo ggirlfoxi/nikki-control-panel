@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Book your kitty — Nikki's Control Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light dark; --paper:#f4eee9; --raised:#fffaf6; --deep:#e9ded6; --ink:#261d20; --muted:#6c5d61; --line:#d7c9c3; --wine:#7d243c; --wine2:#64192f; --wine-soft:#f1dce2; --sage:#386555; --sage-soft:#dbe8e2; --amber:#9d5d17; --amber-soft:#f3e4cc; --shadow:0 16px 45px rgba(58,35,41,.1); }
+    @media (prefers-color-scheme:dark){:root{--paper:#171315;--raised:#211b1e;--deep:#2b2327;--ink:#f5ece8;--muted:#c4b4b8;--line:#44373c;--wine:#e47a98;--wine2:#f19ab2;--wine-soft:#3d202b;--sage:#8cc6b0;--sage-soft:#20372f;--amber:#e9b66b;--amber-soft:#3c2d1e;--shadow:0 18px 50px rgba(0,0,0,.28)}}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:"Manrope",sans-serif;font-size:16px;line-height:1.45}
+    button,input{font:inherit} button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var(--wine) 42%,transparent);outline-offset:3px}
+    .wrap{width:min(640px,100%);margin:auto;padding:24px 18px 48px}
+    .card{padding:24px;border:1px solid var(--line);border-radius:18px;background:var(--raised);box-shadow:var(--shadow)}
+    h1{margin:0;font:700 1.7rem/1.2 "Libre Baskerville",serif} h2{margin:24px 0 8px;font:700 1.15rem/1.25 "Libre Baskerville",serif}
+    p{color:var(--muted)} p.lead{color:var(--ink)} .muted{color:var(--muted);font-size:.82rem}
+    .gate-note,.honesty-note{padding:13px 15px;border-radius:12px;background:var(--amber-soft);color:var(--amber);font-size:.78rem}
+    label{display:block;margin-top:14px;font-size:.76rem;font-weight:800}
+    input{width:100%;min-height:52px;margin-top:8px;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:var(--paper);color:var(--ink);font-weight:700}
+    button{cursor:pointer} .primary{width:100%;min-height:54px;margin-top:12px;border:0;border-radius:11px;background:var(--wine2);color:#fff;font-weight:800}
+    .primary:disabled{opacity:.45;cursor:default}
+    .rec-btn{width:100%;min-height:62px;margin-top:8px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--raised);color:var(--ink);text-align:left;font-weight:800}
+    .rec-btn b{display:block} .rec-btn span{display:block;margin-top:2px;color:var(--muted);font-size:.74rem}
+    .rec-btn.active{border-color:var(--wine);background:var(--wine-soft);color:var(--wine)}
+    .request{margin-top:14px;padding:14px;border-radius:12px;background:var(--deep);font-size:.85rem;white-space:pre-line}
+    .warnings{margin:12px 0 0;padding-left:20px;color:var(--amber);font-size:.8rem;font-weight:700}
+    .warnings:empty{display:none}
+    .back-link{display:inline-block;min-height:44px;padding:11px 0;color:var(--wine);font-weight:800;text-decoration:none}
+    .error{min-height:20px;margin:8px 0 0;color:var(--wine);font-size:.78rem;font-weight:800}
+    .gate-card{width:min(410px,100%);margin:48px auto;padding:30px;border:1px solid var(--line);border-radius:18px;background:var(--raised);box-shadow:var(--shadow)}
+    .gate-card.shake{animation:gate-shake .28s ease}
+    @keyframes gate-shake{25%{transform:translateX(-6px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+    @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <!-- Owner gate. Session gate only — not real security. No code is stored. -->
+  <section id="gateScreen" aria-labelledby="gateTitle">
+    <div class="gate-card" id="gateCard">
+      <h1 id="gateTitle">Owner access</h1>
+      <p>Enter the owner passcode to book your kitty.</p>
+      <form id="gateForm">
+        <label for="ownerCode">Owner passcode</label>
+        <input id="ownerCode" type="password" autocomplete="current-password" required>
+        <button class="primary" type="submit">Continue</button>
+        <p class="error" id="gateError" role="status" aria-live="polite"></p>
+      </form>
+      <p class="gate-note">This gate is for this session only. It is not real security, and nothing you enter here is stored.</p>
+    </div>
+  </section>
+
+  <main class="wrap" id="bookingMain" hidden>
+    <a class="back-link" href="index.html">&larr; Back to the main panel</a>
+    <div class="card">
+      <h1>Book your kitty</h1>
+      <p class="lead">Kitty is house-sitting in Steveston this week, on the mainland until Oct 30. Oct 27&ndash;28 work best; Oct 29 she needs to clean and pack. Her free gaps each day: 9:30&ndash;3:00, 3:10&ndash;4:30, 5:00&ndash;9:30. She can be away up to 5 hours (preferably 4), with about 2 hours of travel by e-bike and train &mdash; so each booking is about 2&ndash;3 hours of work for Master. Pick a day and a work block, and let her know between 9 and 5 when you&rsquo;ll be home.</p>
+
+      <h2>Top 3 recommended</h2>
+      <div role="group" aria-label="Top 3 recommended bookings">
+        <button type="button" class="rec-btn" data-date="2026-10-27" data-start="10:00" data-end="13:00"><b>Recommended 1 &mdash; 2026-10-27</b><span>Work 10:00&ndash;13:00 &middot; Away 09:00&ndash;14:00, travel included</span></button>
+        <button type="button" class="rec-btn" data-date="2026-10-27" data-start="11:00" data-end="14:00"><b>Recommended 2 &mdash; 2026-10-27</b><span>Work 11:00&ndash;14:00 &middot; Away 10:00&ndash;15:00, travel included</span></button>
+        <button type="button" class="rec-btn" data-date="2026-10-28" data-start="10:00" data-end="13:00"><b>Recommended 3 &mdash; 2026-10-28</b><span>Work 10:00&ndash;13:00 &middot; Away 09:00&ndash;14:00, travel included</span></button>
+      </div>
+
+      <h2>Or pick your own date and time</h2>
+      <label for="bookingDate">Day</label>
+      <input id="bookingDate" type="date">
+      <label for="workStart">Work start time</label>
+      <input id="workStart" type="time">
+      <label for="workEnd">Work end time</label>
+      <input id="workEnd" type="time">
+
+      <ul class="warnings" id="warnings" aria-live="polite"></ul>
+      <div class="request" id="bookingRequest" aria-live="polite">Pick a recommended booking, or pick a day and work times, to build the request.</div>
+      <button class="primary" type="button" id="copyBooking" disabled>Build and copy booking request for pasting into Snapchat chat</button>
+      <p class="honesty-note">This page can&rsquo;t send anything by itself. This button only builds and copies the booking request &mdash; paste it into Snapchat chat with your kitty, and that&rsquo;s how she gets it. Nothing is sent from this page.</p>
+      <a class="back-link" href="index.html">&larr; Back to the main panel</a>
+    </div>
+  </main>
+
+  <script>
+    // Owner gate: the panel's existing owner code, as in the main panel file.
+    // Session gate only — not real security. Nothing is stored.
+    var ownerPasscode = "owner";
+    var gateForm = document.getElementById("gateForm");
+    gateForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (document.getElementById("ownerCode").value === ownerPasscode) {
+        document.getElementById("gateScreen").hidden = true;
+        document.getElementById("bookingMain").hidden = false;
+        return;
+      }
+      document.getElementById("gateError").textContent = "That code didn\u2019t work. Try again.";
+      var card = document.getElementById("gateCard");
+      card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
+      document.getElementById("ownerCode").select();
+    });
+    document.getElementById("gateCard").addEventListener("animationend", function () { this.classList.remove("shake"); });
+
+    function toMinutes(t) { var p = t.split(":"); return parseInt(p[0], 10) * 60 + parseInt(p[1], 10); }
+    function toTime(m) { m = ((m % 1440) + 1440) % 1440; var h = Math.floor(m / 60), mm = m % 60; return (h < 10 ? "0" + h : "" + h) + ":" + (mm < 10 ? "0" + mm : "" + mm); }
+    function durationText(mins) {
+      var h = Math.floor(mins / 60), mm = mins % 60;
+      if (mm === 0) return h + (h === 1 ? " hour" : " hours");
+      return h + (h === 1 ? " hour " : " hours ") + mm + " minutes";
+    }
+    function bookingText(date, start, end) {
+      var awayStart = toTime(toMinutes(start) - 60);
+      var awayEnd = toTime(toMinutes(end) + 60);
+      var workMins = toMinutes(end) - toMinutes(start);
+      return "Booking request for your kitty:\nDay: " + date + "\nWork for Master: " + start + "\u2013" + end + "\nAway from the house job (about an hour travel each way included): " + awayStart + "\u2013" + awayEnd + "\nYour kitty will be yours for " + durationText(workMins) + " of work, inside 9 to 5.";
+    }
+    function renderBooking() {
+      var date = document.getElementById("bookingDate").value;
+      var start = document.getElementById("workStart").value;
+      var end = document.getElementById("workEnd").value;
+      var requestEl = document.getElementById("bookingRequest");
+      var warningsEl = document.getElementById("warnings");
+      var copyBtn = document.getElementById("copyBooking");
+      warningsEl.innerHTML = "";
+      if (!date || !start || !end || toMinutes(end) <= toMinutes(start)) {
+        requestEl.textContent = "Pick a recommended booking, or pick a day and work times, to build the request.";
+        if (date && start && end) {
+          var li = document.createElement("li");
+          li.textContent = "Work end time must be after the work start time.";
+          warningsEl.appendChild(li);
+        }
+        copyBtn.disabled = true;
+        return;
+      }
+      var warnings = [];
+      var workMins = toMinutes(end) - toMinutes(start);
+      var awayMins = workMins + 120;
+      if (workMins > 180) warnings.push("Work is longer than 3 hours \u2014 most bookings are about 2\u20133 hours.");
+      if (awayMins > 300) warnings.push("Away time is longer than 5 hours \u2014 preferably 4 hours away.");
+      if (toMinutes(start) < 540 || toMinutes(end) > 1020) warnings.push("Work is outside 9 to 5 \u2014 let her know between 9 and 5 when you\u2019ll be home.");
+      if (date === "2026-10-29") warnings.push("Oct 29 is clean and pack day.");
+      if (date > "2026-10-30") warnings.push("That date is after Oct 30 \u2014 she is on the mainland until Oct 30.");
+      warnings.forEach(function (w) { var li = document.createElement("li"); li.textContent = w; warningsEl.appendChild(li); });
+      requestEl.textContent = bookingText(date, start, end);
+      copyBtn.disabled = false;
+    }
+    document.querySelectorAll(".rec-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".rec-btn").forEach(function (b) { b.classList.toggle("active", b === btn); });
+        document.getElementById("bookingDate").value = btn.dataset.date;
+        document.getElementById("workStart").value = btn.dataset.start;
+        document.getElementById("workEnd").value = btn.dataset.end;
+        renderBooking();
+      });
+    });
+    ["bookingDate", "workStart", "workEnd"].forEach(function (id) {
+      document.getElementById(id).addEventListener("change", function () {
+        document.querySelectorAll(".rec-btn").forEach(function (b) { b.classList.remove("active"); });
+        renderBooking();
+      });
+      document.getElementById(id).addEventListener("input", renderBooking);
+    });
+    document.getElementById("copyBooking").addEventListener("click", function () {
+      var text = document.getElementById("bookingRequest").textContent;
+      if (!text || this.disabled) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { alert("Booking request copied \u2014 paste it into Snapchat chat with your kitty."); });
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand("copy"); document.body.removeChild(ta);
+        alert("Booking request copied \u2014 paste it into Snapchat chat with your kitty.");
+      }
+    });
+  </script>
+</body>
+</html>
